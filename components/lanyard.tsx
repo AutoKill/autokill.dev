@@ -15,6 +15,8 @@ const capitalize = (string: string) =>
 
 export default function Lanyard() {
   const lanyard = useLanyardWS("1096880369111945257");
+  let status = lanyard?.discord_status.toString();
+  if (status === "dnd") status = "Do Not Disturb";
 
   return lanyard ? (
     <>
@@ -33,9 +35,9 @@ export default function Lanyard() {
 
         <div>
           <p className="font-bold">Discord</p>
-          <p>{lanyard.discord_user.username}</p>
+          <p>@{lanyard.discord_user.username}</p>
           <p className={`${classNames[lanyard.discord_status]}`}>
-            {capitalize(lanyard.discord_status)}
+            {capitalize(status!)}
           </p>
         </div>
       </a>

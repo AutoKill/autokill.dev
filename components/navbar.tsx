@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import Socials from './socials';
+import Link from "next/link";
+import Socials from "./socials";
 
 interface Props {
   name: string;
@@ -8,13 +8,13 @@ interface Props {
 
 const data: Props[] = [
   {
-    name: 'home',
-    href: '/',
+    name: "home",
+    href: "/",
   },
   {
-    name: 'contact',
-    href: '/contact'
-  }
+    name: "contact",
+    href: "/contact",
+  },
 ];
 
 export default function Navbar() {
