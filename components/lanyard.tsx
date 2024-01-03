@@ -27,6 +27,16 @@ function formatTime(ms: number) {
   return minutes + ":" + seconds.padStart(2, "0");
 }
 
+function getDevices(desktop: boolean, mobile: boolean, web: boolean) {
+  let devices = [];
+
+  if (desktop) devices.push("Desktop");
+  if (mobile) devices.push("Mobile");
+  if (web) devices.push("Web");
+
+  return devices.length ? devices.join(", ") : "Nowhere";
+}
+
 export default function Lanyard() {
   const lanyard = useLanyardWS("1096880369111945257");
   const [currentTime, setCurrentTime] = useState(new Date().getTime());
@@ -48,15 +58,22 @@ export default function Lanyard() {
       >
         <Image
           src={`https://cdn.discordapp.com/avatars/${lanyard.discord_user.id}/${lanyard.discord_user.avatar}.gif`}
-          width={64}
-          height={64}
+          width={96}
+          height={96}
           alt="discord avatar"
           className="mr-3"
         />
 
         <div>
           <p className="font-bold">Discord</p>
-          <p>{lanyard.discord_user.username}</p>
+          <p>@{lanyard.discord_user.username}</p>
+          <p className="opacity-80">
+            {getDevices(
+              lanyard.active_on_discord_desktop,
+              lanyard.active_on_discord_mobile,
+              lanyard.active_on_discord_web
+            )}
+          </p>
           <p className={`${classNames[lanyard.discord_status]}`}>
             {statusNames[lanyard.discord_status]}
           </p>
@@ -72,8 +89,8 @@ export default function Lanyard() {
           {lanyard.spotify.album_art_url && (
             <Image
               src={lanyard.spotify.album_art_url}
-              width={64}
-              height={64}
+              width={96}
+              height={96}
               alt="discord avatar"
               className="mr-3"
             />
@@ -81,18 +98,17 @@ export default function Lanyard() {
 
           <div>
             <p className="font-bold">Spotify</p>
-            <p>
-              {lanyard.spotify.song} (
-              <span className="opacity-60">
-                {formatTime(currentTime - lanyard.spotify.timestamps.start)}/
-                {formatTime(
-                  lanyard.spotify.timestamps.end -
-                    lanyard.spotify.timestamps.start
-                )}
-              </span>
-              )
+            <p>{lanyard.spotify.song.slice(0, 26)}</p>
+            <span className="opacity-80">
+              {formatTime(currentTime - lanyard.spotify.timestamps.start)}/
+              {formatTime(
+                lanyard.spotify.timestamps.end -
+                  lanyard.spotify.timestamps.start
+              )}
+            </span>
+            <p className="opacity-60">
+              {lanyard.spotify.artist.split(";").slice(0, 2).join(", ")}
             </p>
-            <p className="opacity-60">{lanyard.spotify.artist}</p>
           </div>
         </a>
       )}
