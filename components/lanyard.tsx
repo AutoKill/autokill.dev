@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { useLanyardWS } from "use-lanyard";
 
 const classNames = {
@@ -10,23 +11,43 @@ const classNames = {
   dnd: "text-red-400",
 };
 
-const capitalize = (string: string) =>
-  string.charAt(0).toUpperCase() + string.slice(1);
+const statusNames = {
+  online: "Online",
+  offline: "Offline",
+  idle: "Idle",
+  dnd: "Do Not Disturb",
+};
+
+function formatTime(ms: number) {
+  const totalSeconds = ms / 1000;
+
+  const minutes = (~~(totalSeconds / 60)).toString();
+  const seconds = (~~(totalSeconds % 60)).toString();
+
+  return minutes + ":" + seconds.padStart(2, "0");
+}
 
 export default function Lanyard() {
   const lanyard = useLanyardWS("1096880369111945257");
-  let status = lanyard?.discord_status.toString();
-  if (status === "dnd") status = "Do Not Disturb";
+  const [currentTime, setCurrentTime] = useState(new Date().getTime());
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date().getTime());
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   return lanyard ? (
     <>
       <a
         className="bg-white/5 border border-white/10 border-b-4 cursor-pointer p-3 py-4 rounded-lg hover:scale-95 transition-all flex items-center"
-        href="https://discord.com/users/1096880369111945257"
+        href={`https://discord.com/users/${lanyard.discord_user.id}`}
         target="_blank"
       >
         <Image
-          src={`https://cdn.discordapp.com/avatars/1096880369111945257/${lanyard.discord_user.avatar}.png`}
+          src={`https://cdn.discordapp.com/avatars/${lanyard.discord_user.id}/${lanyard.discord_user.avatar}.gif`}
           width={64}
           height={64}
           alt="discord avatar"
@@ -35,9 +56,9 @@ export default function Lanyard() {
 
         <div>
           <p className="font-bold">Discord</p>
-          <p>@{lanyard.discord_user.username}</p>
+          <p>{lanyard.discord_user.username}</p>
           <p className={`${classNames[lanyard.discord_status]}`}>
-            {capitalize(status!)}
+            {statusNames[lanyard.discord_status]}
           </p>
         </div>
       </a>
@@ -60,7 +81,17 @@ export default function Lanyard() {
 
           <div>
             <p className="font-bold">Spotify</p>
-            <p>{lanyard.spotify.song}</p>
+            <p>
+              {lanyard.spotify.song} (
+              <span className="opacity-60">
+                {formatTime(currentTime - lanyard.spotify.timestamps.start)}/
+                {formatTime(
+                  lanyard.spotify.timestamps.end -
+                    lanyard.spotify.timestamps.start
+                )}
+              </span>
+              )
+            </p>
             <p className="opacity-60">{lanyard.spotify.artist}</p>
           </div>
         </a>
