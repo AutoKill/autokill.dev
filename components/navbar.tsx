@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Socials from "./socials";
 
@@ -18,6 +20,10 @@ const data: Props[] = [
 ];
 
 export default function Navbar() {
+  const handleClick = () => {
+    void new Audio("/pop.mp3").play().catch(() => null);
+  };
+
   return (
     <div className="py-6 mb-2">
       <div className="flex flex-row space-x-2 items-center">
@@ -28,7 +34,9 @@ export default function Navbar() {
                 key={item.name}
                 className="font-semibold cursor-pointer hover:text-white/60 transition-all"
               >
-                <Link href={item.href}>{item.name}</Link>
+                <Link href={item.href} onClick={handleClick}>
+                  {item.name}
+                </Link>
               </div>
             ))}
           </div>
