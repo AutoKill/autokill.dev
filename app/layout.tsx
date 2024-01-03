@@ -3,7 +3,6 @@ import "../styles/tailwind.css";
 import { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Hey, I'm AutoKill",
@@ -30,8 +29,10 @@ export default function RootLayout({
         <div className="mx-auto max-w-3xl px-5">
           <Navbar />
           {children}
+
+          <div className="py-4 mb-2"></div>
+
           <Analytics />
-          <Footer />
         </div>
       </body>
     </html>

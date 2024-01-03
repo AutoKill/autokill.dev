@@ -1,4 +1,5 @@
 import Animation from "@/components/animation";
+import Lanyard from "@/components/lanyard";
 import Technologies from "@/components/technologies";
 import Works from "@/components/works";
 
@@ -8,8 +9,8 @@ export default function Home() {
       <div className="space-y-10">
         <div className="space-y-4">
           <h1 className="text-5xl font-bold">
-            Hey there, I&apos;m{" "}
-            <span className="text-red-400 bg-clip-text">AutoKill</span> 👋
+            Hey there, I&apos;m <span className="text-red-400">AutoKill</span>{" "}
+            👋
           </h1>
           <p className="opacity-90">
             A software engineer from Belgrade, Serbia. I develop mainly backend
@@ -26,13 +27,20 @@ export default function Home() {
         </div>
 
         <div className="space-y-4">
+          <h1 className="text-4xl font-bold">Lanyard 📌</h1>
+          <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+            <Lanyard />
+          </div>
+        </div>
+
+        <div className="space-y-4">
           <h1 className="text-4xl font-bold">Works 🔧</h1>
           <p className="opacity-90">
             I built a lot of things, most of them private. If you want to see
             all my public & open source projects, check out my{" "}
             <a
               className="text-red-400 hover:underline underline-offset-4"
-              href="https://github.com/AutoKill"
+              href="https://github.com/camdzic"
               target="_blank"
             >
               GitHub profile
