@@ -7,10 +7,10 @@ interface Props {
 
 const data: Props[] = [
   {
-    name: 'autokill.dev',
-    description: 'Personal Website',
-    href: 'https://autokill.dev',
-    date: '1/3/2024',
+    name: "autokill.dev",
+    description: "Personal Website",
+    href: "https://github.com/AutoKill/autokill.dev",
+    date: "1/3/2024",
   },
 ];
 

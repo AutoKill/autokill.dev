@@ -40,7 +40,7 @@ export default function Home() {
             all my public & open source projects, check out my{" "}
             <a
               className="text-red-400 hover:underline underline-offset-4"
-              href="https://github.com/camdzic"
+              href="https://github.com/AutoKill"
               target="_blank"
             >
               GitHub profile
