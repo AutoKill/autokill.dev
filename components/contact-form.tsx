@@ -98,7 +98,7 @@ export default function ContactForm() {
           className="bg-white/5 border border-white/10 block border-b-4 p-3 rounded-lg w-full"
           onChange={handleEmailChange}
           value={email}
-          placeholder="John Doe"
+          placeholder="johndoe@gmail.com"
           id="email"
           type="text"
           maxLength={32}
