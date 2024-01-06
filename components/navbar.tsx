@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Socials from "./socials";
+import { usePathname } from "next/navigation";
 
 interface Props {
   name: string;
@@ -20,7 +21,11 @@ const data: Props[] = [
 ];
 
 export default function Navbar() {
-  const handleClick = () => {
+  const pathName = usePathname();
+
+  const handleClick = (href: string) => {
+    if (pathName === href) return;
+
     void new Audio("/pop.mp3").play().catch(() => null);
   };
 
@@ -34,7 +39,7 @@ export default function Navbar() {
                 key={item.name}
                 className="font-semibold cursor-pointer hover:text-white/60 transition-all"
               >
-                <Link href={item.href} onClick={handleClick}>
+                <Link href={item.href} onClick={() => handleClick(item.href)}>
                   {item.name}
                 </Link>
               </div>
