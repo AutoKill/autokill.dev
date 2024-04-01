@@ -10,7 +10,19 @@ const data: Props[] = [
     name: "autokill.dev",
     description: "Personal Website",
     href: "https://github.com/AutoKill/autokill.dev",
-    date: "1/3/2024",
+    date: "03/01/2024",
+  },
+  {
+    name: "mommy-client",
+    description: "Custom Discord Bot",
+    href: "https://github.com/AutoKill/MommyClient",
+    date: "16/01/2024",
+  },
+  {
+    name: "matchcord-profiles",
+    description: "Custom Discord Bot",
+    href: "https://github.com/AutoKill/MatchcordProfiles",
+    date: "31/03/2024",
   },
 ];
 
