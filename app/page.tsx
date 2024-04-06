@@ -1,3 +1,4 @@
+"use client";
 import Animation from "@/components/animation";
 import Lanyard from "@/components/lanyard";
 import Technologies from "@/components/technologies";

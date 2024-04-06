@@ -1,8 +1,19 @@
-import Animation from "@/components/animation";
-import ContactForm from "@/components/contact-form";
+"use client";
+import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+const Animation = dynamic(() => import("@/components/animation"), {
+  ssr: false,
+});
+const ContactForm = dynamic(() => import("@/components/contact-form"), {
+  ssr: false,
+});
 
 export default function Contact() {
-  const getTime = () => {
+  const [currentTime, setCurrentTime] = useState(getTime());
+  const [awakeStatus, setAwakeStatus] = useState(getAwakeStatus());
+
+  function getTime() {
     const date = new Date();
 
     return date.toLocaleTimeString("en-US", {
@@ -11,9 +22,9 @@ export default function Contact() {
       minute: "numeric",
       hour12: true,
     });
-  };
+  }
 
-  const getAwakeStatus = () => {
+  function getAwakeStatus() {
     const now = new Date();
 
     const belgradeTime = new Date(
@@ -23,7 +34,18 @@ export default function Contact() {
     const hour = belgradeTime.getHours();
 
     return hour >= 23 || hour <= 9 ? "asleep" : "awake";
-  };
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newTime = getTime();
+      const newStatus = getAwakeStatus();
+      setCurrentTime(newTime);
+      setAwakeStatus(newStatus);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <Animation>
@@ -45,8 +67,8 @@ export default function Contact() {
         <div className="space-y-4">
           <h1 className="text-4xl font-bold">Do I Sleep 😴</h1>
           <p className="opacity-90">
-            As of <strong>{getTime()}</strong>, I&apos;m currently{" "}
-            <strong>{getAwakeStatus()}</strong>. However, don&apos;t worry if
+            As of <strong>{currentTime}</strong>, I&apos;m currently{" "}
+            <strong>{awakeStatus}</strong>. However, don&apos;t worry if
             it&apos;s late — you can still send an email, and I&apos;ll get back
             to you once I&apos;m awake. Your messages are important to me!
           </p>
