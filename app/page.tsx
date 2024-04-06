@@ -34,10 +34,10 @@ export default function Home() {
         </div>
 
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold">Works 🔧</h1>
+          <h1 className="text-4xl font-bold">Projects 🔧</h1>
           <p className="opacity-90">
-            I built a lot of things, most of them private. If you want to see
-            all my public & open source projects, check out my{" "}
+            I built a lot of things, most of them are private. If you want to
+            see all my public & open source projects, check out my{" "}
             <a
               className="text-red-400 hover:underline underline-offset-4"
               href="https://github.com/AutoKill"
@@ -45,7 +45,7 @@ export default function Home() {
             >
               GitHub profile
             </a>
-            . Below you can find some of my public projects.
+            . You can find some of my projects below.
           </p>
           {/* <hr className="mt-3 h-px bg-white/20 border-0" /> */}
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">

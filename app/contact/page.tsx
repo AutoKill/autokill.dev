@@ -5,17 +5,24 @@ export default function Contact() {
   const getTime = () => {
     const date = new Date();
 
-    const hours = date.getHours() % 12 || 12;
-    const minutes = date.getMinutes();
-    const suffix = date.getHours() >= 12 ? "PM" : "AM";
-
-    return `${hours}:${minutes < 10 ? "0" : ""}${minutes} ${suffix}`;
+    return date.toLocaleTimeString("en-US", {
+      timeZone: "Europe/Belgrade",
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
   };
 
   const getAwakeStatus = () => {
-    const hour = new Date().getHours();
+    const now = new Date();
 
-    return hour >= 23 || hour <= 7 ? "asleep" : "awake";
+    const belgradeTime = new Date(
+      now.toLocaleString("en-US", { timeZone: "Europe/Belgrade" })
+    );
+
+    const hour = belgradeTime.getHours();
+
+    return hour >= 23 || hour <= 9 ? "asleep" : "awake";
   };
 
   return (
