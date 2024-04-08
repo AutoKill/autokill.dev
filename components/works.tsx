@@ -30,6 +30,13 @@ const data: Props[] = [
     date: "31/03/2024",
     imageUrl: require("../public/matchcord.png"),
   },
+  {
+    name: "mommy-service",
+    description: "Custom Discord Bot",
+    href: "https://github.com/AutoKill/MommyService",
+    date: "08/04/2024",
+    imageUrl: require("../public/mommy.png"),
+  },
 ];
 
 export default function Works() {
