@@ -101,7 +101,7 @@ export default function ContactForm() {
           placeholder="johndoe@gmail.com"
           id="email"
           type="text"
-          maxLength={32}
+          maxLength={48}
         />
       </div>
 
@@ -117,7 +117,7 @@ export default function ContactForm() {
           placeholder="Hello AutoKill, I wanted to say..."
           id="message"
           rows={4}
-          maxLength={264}
+          maxLength={356}
         />
       </div>
 
