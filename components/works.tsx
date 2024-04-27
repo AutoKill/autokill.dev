@@ -17,6 +17,13 @@ const data: Props[] = [
     imageUrl: require("../public/AutoKill.png"),
   },
   {
+    name: "afk-zone",
+    description: "Minecraft Plugin",
+    href: "https://builtbybit.com/resources/new-prism-afkzone.43715/",
+    date: "26/04/2024",
+    imageUrl: require("../public/afkzone.png"),
+  },
+  {
     name: "mommy-client",
     description: "Custom Discord Bot",
     href: "https://github.com/AutoKill/MommyClient",
