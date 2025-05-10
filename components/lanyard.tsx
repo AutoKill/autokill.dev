@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
 import { useLanyardWS } from "use-lanyard";
+import { motion } from "framer-motion";
 
 const classNames = {
   online: "text-green-400",
@@ -20,21 +21,68 @@ const statusNames = {
 
 function formatTime(ms: number) {
   const totalSeconds = ms / 1000;
-
   const minutes = (~~(totalSeconds / 60)).toString();
   const seconds = (~~(totalSeconds % 60)).toString();
-
   return minutes + ":" + seconds.padStart(2, "0");
 }
 
 function getDevices(desktop: boolean, mobile: boolean, web: boolean) {
-  let devices = [];
-
+  const devices = [];
   if (desktop) devices.push("Desktop");
   if (mobile) devices.push("Mobile");
   if (web) devices.push("Web");
-
   return devices.length ? devices.join(", ") : "Nowhere";
+}
+
+function MarqueeText({ children, className = "", speed = 60, maxWidth = "100%", pause = 1 }: { children: string; className?: string; speed?: number; maxWidth?: string; pause?: number }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [shouldScroll, setShouldScroll] = useState(false);
+  const [distance, setDistance] = useState(0);
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    const text = textRef.current;
+    if (container && text) {
+      setShouldScroll(text.scrollWidth > container.offsetWidth);
+      setDistance(text.scrollWidth - container.offsetWidth);
+    }
+  }, [children]);
+
+  const xKeyframes = [0, -distance, -distance, 0, 0];
+  const totalScrollTime = distance / speed;
+  const totalPauseTime = pause;
+  const totalDuration = totalScrollTime * 2 + totalPauseTime * 2;
+  const times = [0, totalScrollTime / totalDuration, (totalScrollTime + totalPauseTime) / totalDuration, (totalScrollTime * 2 + totalPauseTime) / totalDuration, 1];
+
+  return (
+    <div
+      ref={containerRef}
+      className={`relative overflow-hidden whitespace-nowrap ${className}`}
+      style={{ maxWidth, width: "100%" }}
+    >
+      {shouldScroll ? (
+        <motion.span
+          ref={textRef}
+          initial={{ x: 0 }}
+          animate={{ x: xKeyframes }}
+          transition={{
+            x: {
+              duration: totalDuration,
+              times,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "linear",
+            },
+          }}
+          style={{ display: "inline-block", minWidth: "100%" }}
+        >
+          {children}
+        </motion.span>
+      ) : (
+        <span ref={textRef} style={{ display: "inline-block", minWidth: "100%" }}>{children}</span>
+      )}
+    </div>
+  );
 }
 
 export default function Lanyard() {
@@ -54,8 +102,8 @@ export default function Lanyard() {
       <a
         className="bg-white/5 border border-white/10 border-b-4 cursor-pointer p-3 py-4 rounded-lg hover:scale-95 transition-all flex items-center"
         href={`https://discord.com/users/${lanyard.discord_user.id}`}
-        target="_blank"
-      >
+        target="_blank" rel="noreferrer"
+      > 
         <Image
           src={`https://cdn.discordapp.com/avatars/${lanyard.discord_user.id}/${lanyard.discord_user.avatar}.gif`}
           width={96}
@@ -84,7 +132,7 @@ export default function Lanyard() {
         <a
           className="bg-white/5 border border-white/10 border-b-4 cursor-pointer p-3 py-4 rounded-lg hover:scale-95 transition-all flex items-center"
           href={`https://open.spotify.com/track/${lanyard.spotify.track_id}`}
-          target="_blank"
+          target="_blank" rel="noreferrer"
         >
           {lanyard.spotify.album_art_url && (
             <Image
@@ -96,9 +144,9 @@ export default function Lanyard() {
             />
           )}
 
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="font-bold">Spotify</p>
-            <p>{lanyard.spotify.song.slice(0, 26)}</p>
+            <MarqueeText speed={15} pause={1} className="font-medium" maxWidth="100%">{`${lanyard.spotify.song}`}</MarqueeText>
             <span className="opacity-80">
               {formatTime(currentTime - lanyard.spotify.timestamps.start)}/
               {formatTime(
@@ -106,9 +154,7 @@ export default function Lanyard() {
                   lanyard.spotify.timestamps.start
               )}
             </span>
-            <p className="opacity-60">
-              {lanyard.spotify.artist.split(";").slice(0, 2).join(", ")}
-            </p>
+            <MarqueeText className="opacity-60" speed={15} pause={1} maxWidth="100%">{lanyard.spotify.artist.split(";").join(", ")}</MarqueeText>
           </div>
         </a>
       )}
@@ -117,8 +163,8 @@ export default function Lanyard() {
     <>
       <a className="bg-white/5 border border-white/10 border-b-4 p-3 py-4 rounded-lg">
         <div className="w-28 animate-pulse">
-          <div className="mt-1 h-4 w-full overflow-hidden rounded-md bg-white/10"></div>
-          <div className="mt-1 h-4 w-2/3 overflow-hidden rounded-md bg-white/10"></div>
+          <div className="mt-1 h-4 w-full overflow-hidden rounded-md bg-white/10" />
+          <div className="mt-1 h-4 w-2/3 overflow-hidden rounded-md bg-white/10" />
         </div>
       </a>
     </>
