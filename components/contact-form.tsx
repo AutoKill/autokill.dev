@@ -69,7 +69,6 @@ export default function ContactForm() {
       });
       toast.remove("loading-toast");
       if (res.status === 429) {
-        // Reason: User is being rate limited, show error toast with API message
         const data = await res.json();
         toast.error(data.error || "You are being rate limited. Please try again later.", {
           id: "rate-limit-toast",

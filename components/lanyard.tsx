@@ -97,6 +97,16 @@ export default function Lanyard() {
     return () => clearInterval(intervalId);
   }, []);
 
+  let avatarSrc = "";
+  if (lanyard && lanyard.discord_user.avatar) {
+    const isAnimated = lanyard.discord_user.avatar.startsWith("a_");
+    const ext = isAnimated ? "gif" : "png";
+    avatarSrc = `https://cdn.discordapp.com/avatars/${lanyard.discord_user.id}/${lanyard.discord_user.avatar}.${ext}`;
+  } else if (lanyard) {
+    const defaultAvatarIndex = (BigInt(lanyard.discord_user.id) >> BigInt(22)) % BigInt(6);
+    avatarSrc = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarIndex}.png`;
+  }
+
   return lanyard ? (
     <>
       <a
@@ -105,7 +115,7 @@ export default function Lanyard() {
         target="_blank" rel="noreferrer"
       > 
         <Image
-          src={`https://cdn.discordapp.com/avatars/${lanyard.discord_user.id}/${lanyard.discord_user.avatar}.gif`}
+          src={avatarSrc}
           width={96}
           height={96}
           alt="discord avatar"
