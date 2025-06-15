@@ -56,36 +56,82 @@ export default function ContactForm() {
       },
     });
 
-    await fetch("/api/sendMessage", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        message,
-      }),
-    });
-
-    toast.remove("loading-toast");
-    toast.success(
-      "Thank you for your message! I will get back to you as soon as I can.",
-      {
-        id: "success-toast",
+    try {
+      const res = await fetch("/api/sendMessage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          message,
+        }),
+      });
+      toast.remove("loading-toast");
+      if (res.status === 429) {
+        // Reason: User is being rate limited, show error toast with API message
+        const data = await res.json();
+        toast.error(data.error || "You are being rate limited. Please try again later.", {
+          id: "rate-limit-toast",
+          position: "top-right",
+          style: {
+            background: ERROR_COLOR,
+            color: "#fff",
+          },
+          iconTheme: {
+            primary: "#fff",
+            secondary: ERROR_COLOR,
+          },
+        });
+        return;
+      }
+      if (!res.ok) {
+        toast.error("Failed to send message. Please try again later.", {
+          id: "error-toast",
+          position: "top-right",
+          style: {
+            background: ERROR_COLOR,
+            color: "#fff",
+          },
+          iconTheme: {
+            primary: "#fff",
+            secondary: ERROR_COLOR,
+          },
+        });
+        return;
+      }
+      toast.success(
+        "Thank you for your message! I will get back to you as soon as I can.",
+        {
+          id: "success-toast",
+          position: "top-right",
+          style: {
+            background: SUCCESS_COLOR,
+            color: "#fff",
+          },
+          iconTheme: {
+            primary: "#fff",
+            secondary: SUCCESS_COLOR,
+          },
+        }
+      );
+      setEmail("");
+      setMessage("");
+    } catch (err) {
+      toast.remove("loading-toast");
+      toast.error("An error occurred. Please try again later.", {
+        id: "error-toast",
         position: "top-right",
         style: {
-          background: SUCCESS_COLOR,
+          background: ERROR_COLOR,
           color: "#fff",
         },
         iconTheme: {
           primary: "#fff",
-          secondary: SUCCESS_COLOR,
+          secondary: ERROR_COLOR,
         },
-      }
-    );
-
-    setEmail("");
-    setMessage("");
+      });
+    }
   };
 
   return (

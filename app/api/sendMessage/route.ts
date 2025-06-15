@@ -1,5 +1,34 @@
+import { RateLimiter } from "limiter";
+
+// In-memory map to store rate limiters per IP
+const ipLimiters = new Map<string, RateLimiter>();
+
 export async function POST(req: Request) {
 	try {
+		const forwarded = req.headers.get("x-forwarded-for");
+		const ip = forwarded ? forwarded.split(",")[0].trim() : undefined;
+
+		if (!ip) {
+			console.error("Could not determine client IP address.");
+			return new Response(JSON.stringify({ success: false, error: "Could not determine client IP address." }), {
+				status: 400,
+			});
+		}
+
+		let limiter = ipLimiters.get(ip);
+		if (!limiter) {
+			limiter = new RateLimiter({ tokensPerInterval: 2, interval: "minute", fireImmediately: true });
+			ipLimiters.set(ip, limiter);
+		}
+
+		const remaining = await limiter.removeTokens(1);
+		if (remaining < 0) {
+			return new Response(
+				JSON.stringify({ success: false, error: "You are being rate limited. Please try again in a minute." }),
+				{ status: 429 }
+			);
+		}
+
 		const contentType = req.headers.get("Content-Type");
 		if (!contentType || !contentType.includes("application/json")) {
 			console.error("Invalid content type. Expected application/json.");
